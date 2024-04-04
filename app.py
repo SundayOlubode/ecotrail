@@ -2,12 +2,26 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import plotly.express as px
+from auth import register, login
 
 st.set_page_config(page_title="Climate Change in Africa",
                    page_icon="🌍", layout="wide")
 st.title("🌍 Climate Change in Africa")
 st.markdown(
     '<style>div.block-container{padding-top:2rem;}</style>', unsafe_allow_html=True)
+
+# Put sign up in expander
+register_expander = st.expander("Register(Optional)")
+login_expander = st.expander("Login(Optional)")
+
+cola, colb, colc, cold, cole, colf = st.columns(6)
+
+with cola:
+    with register_expander:
+        register()
+with cole:
+    with login_expander:
+        login()
 
 col1, col2 = st.columns([1, 1])
 
