@@ -12,6 +12,18 @@ myclient = pymongo.MongoClient(MONGO_URL)
 
 mydb = myclient[DB_NAME]
 user_col = mydb[USER_TABLE_NAME]
+comment_col = mydb[COMMENT_TABLE_NAME]
+
+
+def create_comment(comment, username, chart_tag):
+    mydict = {"comment": comment, "username": username, "chart_tag": chart_tag}
+    new_comment = comment_col.insert_one(mydict)
+    return new_comment
+
+
+def fetch_all_comments(chart_tag):
+    comments = comment_col.find({"chart_tag": chart_tag})
+    return comments
 
 
 def register_user(email, username, password):

@@ -92,4 +92,4 @@ def login():
             st.error("Invalid credentials, Try Again!")
 
         if submit:
-            set_cookie_value(email, username)
+            set_cookie_value('username', username)
