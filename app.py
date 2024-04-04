@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
-import streamlit_authenticator as stauth
 import plotly.express as px
 from auth import register, login
 from database import create_comment, fetch_all_comments, fetch_all_users

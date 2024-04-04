@@ -1,6 +1,4 @@
 import streamlit as st
-import streamlit_authenticator as stauth
-import datetime
 import re
 from database import get_user_by_email, get_user_by_username, register_user, login_user
 
