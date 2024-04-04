@@ -1,27 +1,25 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
+import streamlit_authenticator as stauth
 import plotly.express as px
 from auth import register, login
+from database import fetch_all_users
 
 st.set_page_config(page_title="Climate Change in Africa",
                    page_icon="🌍", layout="wide")
-st.title("🌍 Climate Change in Africa")
+st.title("🌍 Temperature and CO2 Emission Trends in Africa")
 st.markdown(
     '<style>div.block-container{padding-top:2rem;}</style>', unsafe_allow_html=True)
 
-# Put sign up in expander
-register_expander = st.expander("Register(Optional)")
-login_expander = st.expander("Login(Optional)")
+# Put sign up and login in expander
+register_expander = st.expander("Register (optional)")
+login_expander = st.expander("Login (optional)")
 
-cola, colb, colc, cold, cole, colf = st.columns(6)
-
-with cola:
-    with register_expander:
-        register()
-with cole:
-    with login_expander:
-        login()
+with register_expander:
+    register()
+with login_expander:
+    login()
 
 col1, col2 = st.columns([1, 1])
 
@@ -134,7 +132,6 @@ def plot_regional_c02_contribution():
     """, unsafe_allow_html=True)
 
 
-# Calculate the average temperature for each region
 def plot_avg_regional_temp():
     st.subheader('Average Regional Temperature')
     avg_temp_by_region = melted_temp_df.groupby(
@@ -161,7 +158,6 @@ def plot_avg_regional_temp():
     """, unsafe_allow_html=True)
 
 
-# Average Temperature of Each Region (1960 to 2013)
 def plot_avg_regional_temp_time_series():
     st.subheader('Regional Temperature Time Series')
     avg_temp_by_region_year = melted_temp_df.groupby(['Year', 'Region'])[
@@ -226,11 +222,9 @@ def plot_average_regional_co2_and_temp():
 
     merged_data = pd.merge(avg_temp_by_region, avg_co2_by_region, on='Region')
 
-    # Melt the data for plotting grouped bar chart
     merged_data_melted = pd.melt(
         merged_data, id_vars='Region', var_name='Type', value_name='Value')
 
-    # Plot a grouped bar chart of the average regional temperature and CO2 emission
     fig = px.bar(merged_data_melted, x='Region', y='Value', color='Type',
                  barmode='group',
                  labels={'Value': 'Average Value', 'Region': 'Region'},
@@ -264,14 +258,12 @@ def plot_temp_map():
     selected_year = st.selectbox(
         'Select a specific year (5-year intervals)', years_list)
 
-    # Filter the data based on the selected year
     avg_temp_selected_year = df_temp_melted[df_temp_melted['Year']
                                             == selected_year]
 
     avg_temp_by_country = avg_temp_selected_year.groupby(
         'Country')['Temperature'].mean().reset_index()
 
-    # Plot a choropleth map of country temperatures in Africa for the selected year
     fig = px.choropleth(avg_temp_by_country, locations='Country', locationmode='country names',
                         color='Temperature', scope='africa',
                         color_continuous_scale='hot_r', range_color=(avg_temp_by_country['Temperature'].min(), avg_temp_by_country['Temperature'].max()),
@@ -305,14 +297,12 @@ def plot_emission_map():
     selected_year = st.selectbox(
         'Select a specific year (5-year intervals)', years_list, key='emission_map')
 
-    # Filter the data based on the selected year
     avg_emission_selected_year = df_emission_melted[df_emission_melted['Year']
                                                     == selected_year]
 
     avg_temp_by_country = avg_emission_selected_year.groupby(
         'Country')['Emission'].mean().reset_index()
 
-    # Plot a choropleth map of country temperatures in Africa for the selected year
     fig = px.choropleth(avg_temp_by_country, locations='Country', locationmode='country names',
                         color='Emission', scope='africa',
                         color_continuous_scale='blackbody_r', range_color=(avg_temp_by_country['Emission'].min(), avg_temp_by_country['Emission'].max()),

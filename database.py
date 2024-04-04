@@ -23,3 +23,19 @@ def register_user(email, username, password):
 def login_user(email, password):
     user = user_col.find_one({"email": email, "password": password})
     return user
+
+
+def get_user_by_email(email):
+    user = user_col.find_one({"email": email})
+    return user
+
+
+def get_user_by_username(username):
+    user = user_col.find_one({"username": username})
+    return user
+
+
+def fetch_all_users():
+    users = user_col.find()
+    print('Users', users)
+    return users

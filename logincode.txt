@@ -1,0 +1,49 @@
+
+try:
+    users = [{'_id': '660e7b0c921e36b08a0972b9',
+              'email': 'john@gmail.com', 'username': 'John', 'password': 'Highway37'}]
+    emails = []
+    usernames = []
+    passwords = []
+
+    for user in users:
+        emails.append(user['email'])
+        usernames.append(user['username'])
+        passwords.append(user['password'])
+
+    credentials = {'usernames': {}}
+
+    for index in range(len(emails)):
+        credentials['usernames'][usernames[index]] = {
+            'password': passwords[index],
+            'name': emails[index]
+        }
+
+    Authenticator = stauth.Authenticate(
+        credentials,
+        cookie_name='Ecotrail_Authenticator',
+        cookie_key='streamlit_authenticator',
+        cookie_expiry_days=1,
+        pre_authorized=False
+    )
+
+    email, authentication_status, username = Authenticator.login(
+        ':green[Login]', 'main')
+
+    info, info1 = st.columns(2)
+
+    if username:
+        if username in usernames:
+            if authentication_status:
+                info.success(f"Welcome {username}")
+            elif not authentication_status:
+                st.error("Username/password is incorrect")
+            else:
+                st.warning("Please enter your username and password")
+        else:
+            st.warning("User not found, Please register")
+
+except (Exception):
+    print(Exception)
+    st.write(Exception)
+    st.success('Refresh Page to see changes')
