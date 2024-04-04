@@ -64,7 +64,7 @@ def commenter(chart_tag):
         # Display previous comments
         previous_comments = fetch_all_comments(chart_tag)
         if previous_comments:
-            st.write("Previous comments:")
+            st.write("**:green[Comments]**")
             for comment in previous_comments:
                 username = comment["username"]
                 comment = comment["comment"]

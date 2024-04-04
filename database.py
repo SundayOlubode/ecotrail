@@ -49,5 +49,4 @@ def get_user_by_username(username):
 
 def fetch_all_users():
     users = user_col.find()
-    print('Users', users)
     return users
