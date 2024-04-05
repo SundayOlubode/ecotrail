@@ -42,6 +42,8 @@ A software application that provides comprehensive insights into historical clim
 
 ![Dashboard Screenshot](images/dashboard.png)
 
+## Live: [Ecotrail](ecotrail.streamlit.app)
+
 # Author
 
 - [Samuel Olubode](www.github.com/SundayOlubode)
