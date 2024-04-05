@@ -30,41 +30,45 @@ def register():
             'Password', type='password', placeholder='Enter Password')
         confirm_password = st.text_input(
             'Confirm Password', type='password', placeholder='Confirm Password')
-        st.form_submit_button('Register')
+        submit = st.form_submit_button('Register')
 
-        if email:
-            if validate_email(email):
-                oldUser = get_user_by_email(email)
+        if submit:
+            if email:
+                if validate_email(email):
+                    oldUser = get_user_by_email(email)
+                    if oldUser:
+                        st.warning('User already exists! Please login.')
+                        return
+                else:
+                    st.warning('Please enter a valid email address')
+            else:
+                st.warning('Please enter an email address')
+                return
+
+            if username:
+                oldUser = get_user_by_username(username)
                 if oldUser:
-                    st.warning('User already exists! Please login.')
+                    st.warning(
+                        'Username already exists! Please choose another.')
                     return
             else:
-                st.warning('Please enter a valid email address')
-        else:
-            st.warning('Please enter an email address')
-            return
-
-        if username:
-            oldUser = get_user_by_username(username)
-            if oldUser:
-                st.warning('Username already exists! Please choose another.')
+                st.warning('Please enter a username')
                 return
-        else:
-            st.warning('Please enter a username')
-            return
 
-        if not password:
-            st.warning('Please enter a password')
-            return
-        if len(password) < 5:
-            st.warning('Password must be at least 5 characters')
-            return
-        if password != confirm_password:
-            st.warning('Passwords do not match!')
-            return
+            if not password:
+                st.warning('Please enter a password')
+                return
+            if len(password) < 5:
+                st.warning('Password must be at least 5 characters')
+                return
+            if password != confirm_password:
+                st.warning('Passwords do not match!')
+                return
 
-        register_user(email, username, password)
-        st.success('User registered successfully! Please login.')
+            register_user(email, username, password)
+            set_cookie_value('username', username)
+            st.success(
+                'User registered successfully! You can now proceed to interact with the app.')
 
 
 def login():
@@ -75,19 +79,19 @@ def login():
             'Password', type='password', placeholder='Enter Password')
         submit = st.form_submit_button('Login')
 
-        user = get_user_by_email(email)
-
-        if not user:
-            st.error('User does not exist. Please register.')
-            return
-
-        username = ''
-
-        if email == user['email'] and password == user['password']:
-            username = user['username']
-            st.success("Logged in as {}".format(user['username']))
-        else:
-            st.error("Invalid credentials, Try Again!")
-
         if submit:
-            set_cookie_value('username', username)
+            user = get_user_by_email(email)
+
+            if not user:
+                st.error('User does not exist. Please register.')
+                return
+
+            username = ''
+
+            if email == user['email'] and password == user['password']:
+                username = user['username']
+                st.success("Logged in as {}".format(user['username']))
+            else:
+                st.error("Invalid credentials, Try Again!")
+            if submit:
+                set_cookie_value('username', username)

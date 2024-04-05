@@ -47,6 +47,10 @@ melted_co2_df['Year'] = pd.to_numeric(melted_co2_df['Year'])
 
 
 def commenter(chart_tag):
+    """
+    Function to add comments to the charts
+    """
+
     with st.expander("Comment"):
         # Text area to input comments
         new_comment = st.text_area(
@@ -60,8 +64,15 @@ def commenter(chart_tag):
             except Exception as e:
                 st.error("Please Login Again to Comment")
                 return
+
         # Display previous comments
         previous_comments = fetch_all_comments(chart_tag)
+
+        # Reverse comments to show the latest first
+        previous_comments = [
+            comment for comment in previous_comments if comment["comment"]]
+        previous_comments.reverse()
+
         if previous_comments:
             st.write("**:green[Comments]**")
             for comment in previous_comments:
@@ -71,6 +82,10 @@ def commenter(chart_tag):
 
 
 def plot_filterable_highest_temp():
+    """
+    Plot the countries with the highest temperature and CO2 emission
+    """
+
     global filtered_temp_df, filtered_co2_df
     with col1:
         chart_tag = 'filterable_highest_temp'
@@ -140,6 +155,10 @@ def plot_filterable_highest_temp():
 
 
 def plot_regional_c02_contribution():
+    """
+    Plot the regional CO2 contribution
+    """
+
     st.subheader('Regional Temperature Contribution')
     chart_tag = 'regional_temp_contribution'
 
@@ -160,7 +179,7 @@ def plot_regional_c02_contribution():
     }
     </style>
     <div class="info">
-        Western Africa has the highest temperature contribution in Africa, 
+        Western Africa has the highest temperature contribution in Africa,
         followed by Eastern Africa, and Central Africa.
     </div>
     """, unsafe_allow_html=True)
@@ -170,6 +189,10 @@ def plot_regional_c02_contribution():
 
 
 def plot_avg_regional_temp():
+    """
+    Plot the average regional temperature
+    """
+
     st.subheader('Average Regional Temperature')
     chart_tag = 'avg_regional_temp'
     avg_temp_by_region = melted_temp_df.groupby(
@@ -199,6 +222,10 @@ def plot_avg_regional_temp():
 
 
 def plot_avg_regional_temp_time_series():
+    """
+    Plot the average regional temperature time series
+    """
+
     st.subheader('Regional Temperature Time Series')
     chart_tag = 'regional_temp_time_series'
     avg_temp_by_region_year = melted_temp_df.groupby(['Year', 'Region'])[
@@ -228,6 +255,10 @@ def plot_avg_regional_temp_time_series():
 
 
 def plot_avg_regional_co2_emission_time_series():
+    """
+    Plot the average regional CO2 emission time series.
+    """
+
     st.subheader('Regional CO2 Emission Time Series')
     chart_tag = 'regional_co2_emission_time_series'
     avg_emission_by_region_year = melted_co2_df.groupby(['Year', 'Region'])[
@@ -258,6 +289,10 @@ def plot_avg_regional_co2_emission_time_series():
 
 
 def plot_average_regional_co2_and_temp():
+    """
+    Plot the average regional temperature and CO2 emission.
+    """
+
     st.subheader(' Regional Temperature & CO2 Emission')
     chart_tag = 'avg_regional_temp_co2'
     avg_temp_by_region = melted_temp_df.groupby(
@@ -290,7 +325,7 @@ def plot_average_regional_co2_and_temp():
         text-align: center;
     }
     </style>
-    <div class="info"> This chart show the average regional temperature and CO2 emission. 
+    <div class="info"> This chart show the average regional temperature and CO2 emission.
     The CO2 emission value is multiplied by 10 for better visualization.
     </div>
     """, unsafe_allow_html=True)
@@ -299,6 +334,10 @@ def plot_average_regional_co2_and_temp():
 
 
 def plot_temp_map():
+    """
+    Plot the countries temperature map.
+    """
+
     st.subheader('Countries Temperature Map')
     chart_tag = 'countries_temp_map'
     df_temp_melted = melted_temp_df.copy()
@@ -341,6 +380,10 @@ def plot_temp_map():
 
 
 def plot_emission_map():
+    """
+    Plot the countries CO2 emission map.
+    """
+
     st.subheader('Regional CO2 Emission Map')
     chart_tag = 'emission_map'
     df_emission_melted = melted_co2_df.copy()
